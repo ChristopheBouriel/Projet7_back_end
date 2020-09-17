@@ -20,8 +20,8 @@ exports.signup = (req, res, next) => {
         }; 
         console.log(user);
         connexion.query(
-            `INSERT INTO users (id, userId, userName, userPassword, firstname, lastname, service, email, aboutMe) VALUES(
-                ?,?,?,?,?,?,?,?,?)`, [null, user.userId, user.userName, user.userPassword, user.firstname, user.lastname, user.service, user.email, user.aboutMe],
+            `INSERT INTO users (userId, userName, userPassword, firstname, lastname, service, email, aboutMe) VALUES(
+                ?,?,?,?,?,?,?,?)`, [ user.userId, user.userName, user.userPassword, user.firstname, user.lastname, user.service, user.email, user.aboutMe],
                 (error, result) => {res.send("Done")}
         )
          }).catch(error => res.status(500).json({ error }));

@@ -10,6 +10,7 @@ const helmet = require('helmet');
 
 //const saucesRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
+const publicationsRoutes = require('./routes/publication');
 const app = express();
 
 app.use(helmet());
@@ -25,11 +26,7 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json());
 //app.use('/images', express.static(path.join(__dirname, 'images')));
-app.use('/api/publications', (req, res, next) => {
-  connexion.query(`SELECT * FROM publications`, (err, result) => {
-    return res.send(result);
-  })
-});
+app.use('/api/publications', publicationsRoutes);
 
 app.use('/api/auth', userRoutes);
 
