@@ -11,6 +11,7 @@ const helmet = require('helmet');
 //const saucesRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
 const publicationsRoutes = require('./routes/publication');
+const commentsRoutes = require('./routes/comment');
 const app = express();
 
 app.use(helmet());
@@ -27,7 +28,7 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 //app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/api/publications', publicationsRoutes);
-
+app.use('/api/comments', commentsRoutes);
 app.use('/api/auth', userRoutes);
 
 module.exports = app;

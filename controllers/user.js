@@ -22,7 +22,12 @@ exports.signup = (req, res, next) => {
         connexion.query(
             `INSERT INTO users (userId, userName, userPassword, firstname, lastname, service, email, aboutMe) VALUES(
                 ?,?,?,?,?,?,?,?)`, [ user.userId, user.userName, user.userPassword, user.firstname, user.lastname, user.service, user.email, user.aboutMe],
-                (error, result) => {res.send("Done")}
+                (error, result) => {
+                  if(error) {
+                    res.send(error.sqlMessage)
+                  }
+                 res.send("Insertion réussie")
+                }
         )
          }).catch(error => res.status(500).json({ error }));
 };
@@ -42,6 +47,7 @@ exports.signup = (req, res, next) => {
             }
             res.status(200).json({
               userId: user[0].userId,
+              userName: user[0].userName,
               token: jwt.sign(
                 { userId: user[0].userId },
                 'provisory_token',
