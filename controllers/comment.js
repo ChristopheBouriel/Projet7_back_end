@@ -25,7 +25,6 @@ exports.addComment = (req, res, next) => {
 };
 
 exports.deleteComment = (req, res, next) => {
-    
     connexion.query(`DELETE FROM comments WHERE id=?`,[req.body.id], (error, result) => {
         if(error) {res.send(error.sqlMessage)}
         else {
@@ -40,4 +39,18 @@ exports.deleteComment = (req, res, next) => {
     })  
 };
 
-  
+exports.modifyComment = (req, res, next) => {
+    const content = req.body.content;
+    const modified = req.body.modified;
+    const date_modif = req.body.date_modif;
+    const id = req.body.commentId;
+    connexion.query(`UPDATE comments SET content='${content}', modified='${modified}', date_modif='${date_modif}' WHERE id='${id}'`, (error, result) => {
+        if(error) {res.send(error.sqlMessage)}
+        else {res.send({message:"Done update"})
+            
+                                                
+                                                
+        }
+
+    })  
+};
