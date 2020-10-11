@@ -6,5 +6,7 @@ const userCtrl = require('../controllers/user');
 
 router.post('/signup', accessCheck.accessCreateAccountLimiter, userCtrl.signup);
 router.post('/login', accessCheck.accessCreateAccountLimiter, userCtrl.login);
+router.get('/list', accessCheck.seeProfileLimiter, userCtrl.getAllUsers);
+
 
 module.exports = router;

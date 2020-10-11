@@ -2,7 +2,7 @@ const connexion = require('../dataBaseAccess');
 
 
 exports.getAllPublications = (req, res, next) => {
-    connexion.query(`SELECT * FROM publications`, (err, result) => {
+    connexion.query(`SELECT * FROM publications ORDER BY date_publication DESC`, (err, result) => {
         res.send(result);
     })
   };

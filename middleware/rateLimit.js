@@ -5,3 +5,9 @@ exports.accessCreateAccountLimiter = rateLimit({
     max: 5,
     message: "Too many attempts"
 });
+
+exports.seeProfileLimiter = rateLimit({
+    windowMs: 3 * 60 * 60 * 1000,
+    max: 300,
+    message: "Too many attempts"
+});

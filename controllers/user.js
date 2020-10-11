@@ -20,19 +20,21 @@ exports.signup = (req, res, next) => {
         }; 
         console.log(user);
         connexion.query(
-            `INSERT INTO users (userId, userName, userPassword, firstname, lastname, service, email, aboutMe) VALUES(
-                ?,?,?,?,?,?,?,?)`, [ user.userId, user.userName, user.userPassword, user.firstname, user.lastname, user.service, user.email, user.aboutMe],
+            `INSERT INTO users (userName, userPassword, firstname, lastname, service, email, aboutMe) VALUES(
+                ?,?,?,?,?,?,?)`, [ user.userName, user.userPassword, user.firstname, user.lastname, user.service, user.email, user.aboutMe],
                 (error, result) => {
                   if(error) {
                     res.send(error.sqlMessage)
+                  } else {
+                    res.send({message:"Insertion réussie"})
                   }
-                 res.send("Insertion réussie")
+                 
                 }
         )
          }).catch(error => res.status(500).json({ error }));
 };
 
-  exports.login = (req, res, next) => {
+exports.login = (req, res, next) => {
     connexion.query(
         `SELECT * FROM users WHERE userName = ?`, [req.body.userName],
         (error, user) => {
@@ -56,9 +58,13 @@ exports.signup = (req, res, next) => {
             });
           })
           .catch(error => res.status(500).json({ error }));
-        }
-      
-        
+        }  
     )
       //.catch(error => res.status(500).json({ error }));
+};
+
+exports.getAllUsers = (req, res, next) => {
+  connexion.query(`SELECT userName, firstname, lastname, service FROM users ORDER BY userName`, (err, result) => {
+      res.send(result);
+  })
 };

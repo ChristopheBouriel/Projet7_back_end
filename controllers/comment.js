@@ -18,7 +18,7 @@ exports.addComment = (req, res, next) => {
                 SET numberComments = numberComments + 1
                 WHERE id = ?`, [req.body.postId],(error, result)=>{
                                                 if(error) {res.send(error.sqlMessage)}
-                                                else{res.send({message:"Done"})}
+                                                else{res.send({message:"Comment added"})}
                                                 })
         } 
     })
@@ -31,7 +31,7 @@ exports.deleteComment = (req, res, next) => {
             connexion.query(`UPDATE publications 
                 SET numberComments = numberComments - 1
                 WHERE id = ?`, [req.body.postId], (err, result) => {
-                                                if (result) {res.send({message:"Done"});}
+                                                if (result) {res.send({message:"Comment deleted"});}
                                                 if (err) {res.send(err);}
                                                 })
         }
@@ -46,7 +46,7 @@ exports.modifyComment = (req, res, next) => {
     const id = req.body.commentId;
     connexion.query(`UPDATE comments SET content='${content}', modified='${modified}', date_modif='${date_modif}' WHERE id='${id}'`, (error, result) => {
         if(error) {res.send(error.sqlMessage)}
-        else {res.send({message:"Done update"})
+        else {res.send({message:"Update done"})
             
                                                 
                                                 

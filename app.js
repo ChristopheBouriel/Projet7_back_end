@@ -12,11 +12,10 @@ const helmet = require('helmet');
 const userRoutes = require('./routes/user');
 const publicationsRoutes = require('./routes/publication');
 const commentsRoutes = require('./routes/comment');
+const profilesRoutes = require('./routes/profile');
 const app = express();
 
 app.use(helmet());
-
-
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -30,5 +29,6 @@ app.use(bodyParser.json());
 app.use('/api/publications', publicationsRoutes);
 app.use('/api/comments', commentsRoutes);
 app.use('/api/auth', userRoutes);
+app.use('/api/profiles', profilesRoutes);
 
 module.exports = app;
