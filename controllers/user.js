@@ -2,14 +2,16 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const connexion = require('../dataBaseAccess');
+const { v4: uuidv4} = require('uuid');
 //require('dotenv').config();
 
 exports.signup = (req, res, next) => {
+    const userId = uuidv4();
     let user;
     bcrypt.hash(req.body.userPassword, 10)
       .then(hash => {
         user = {
-            userId: req.body.userId,
+            userId: userId,
             userName: req.body.userName,
             userPassword: hash,
             firstname : req.body.firstname,
@@ -20,8 +22,8 @@ exports.signup = (req, res, next) => {
         }; 
         console.log(user);
         connexion.query(
-            `INSERT INTO users (userName, userPassword, firstname, lastname, service, email, aboutMe) VALUES(
-                ?,?,?,?,?,?,?)`, [ user.userName, user.userPassword, user.firstname, user.lastname, user.service, user.email, user.aboutMe],
+            `INSERT INTO users (userId, userName, userPassword, firstname, lastname, service, email, aboutMe) VALUES(
+                ?,?,?,?,?,?,?,?)`, [ user.userId, user.userName, user.userPassword, user.firstname, user.lastname, user.service, user.email, user.aboutMe],
                 (error, result) => {
                   if(error) {
                     res.send(error.sqlMessage)
@@ -67,4 +69,32 @@ exports.getAllUsers = (req, res, next) => {
   connexion.query(`SELECT userName, firstname, lastname, service FROM users ORDER BY userName`, (err, result) => {
       res.send(result);
   })
+};
+
+exports.modifyPassword = (req, res, next) => {
+  let password 
+  bcrypt.hash(req.body.userPassword, 10)
+  .then(hash => {
+    password = hash
+    const email = req.body.email;
+  connexion.query(`UPDATE users SET userPassword='${password}' 
+    WHERE email='${email}'`, (error, result) => {
+        if(error) {res.send(error.sqlMessage)}
+        else {res.send({message:"Update done"})                                    
+        }
+    })  
+    }
+    )  
+};
+
+exports.modifyUserName = (req, res, next) => {
+  const userName = req.body.userName;
+  const email = req.body.email;
+  connexion.query(`UPDATE users SET userName='${userName}' 
+  WHERE email='${email}'`, (error, result) => {
+    if(error) {res.send(error.sqlMessage)}
+    else {res.send({message:"Update done"})}
+  }
+  )
+  // changer le nom d'utilisateur partout !!!
 };
