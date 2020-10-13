@@ -26,11 +26,10 @@ exports.signup = (req, res, next) => {
                 ?,?,?,?,?,?,?,?)`, [ user.userId, user.userName, user.userPassword, user.firstname, user.lastname, user.service, user.email, user.aboutMe],
                 (error, result) => {
                   if(error) {
-                    res.send(error.sqlMessage)
+                    res.status(500).send(error.sqlMessage)
                   } else {
-                    res.send({message:"Insertion réussie"})
+                    res.status(201).send({message:"Création réussie"})
                   }
-                 
                 }
         )
          }).catch(error => res.status(500).json({ error }));
@@ -61,13 +60,14 @@ exports.login = (req, res, next) => {
           })
           .catch(error => res.status(500).json({ error }));
         }  
-    )
-      //.catch(error => res.status(500).json({ error }));
+    )   //.catch(error => res.status(500).json({ error }));
 };
 
 exports.getAllUsers = (req, res, next) => {
-  connexion.query(`SELECT userName, firstname, lastname, service FROM users ORDER BY userName`, (err, result) => {
-      res.send(result);
+  connexion.query(`SELECT userName, firstname, lastname, service FROM users ORDER BY userName`, (error, result) => {
+    if(error) {res.status(500).send(error.sqlMessage)}
+    else {res.status(200).send(result);                                  
+    }
   })
 };
 
@@ -79,8 +79,8 @@ exports.modifyPassword = (req, res, next) => {
     const email = req.body.email;
   connexion.query(`UPDATE users SET userPassword='${password}' 
     WHERE email='${email}'`, (error, result) => {
-        if(error) {res.send(error.sqlMessage)}
-        else {res.send({message:"Update done"})                                    
+        if(error) {res.status(500).send(error.sqlMessage)}
+        else {res.status(200).send({message:"Update done"})                                    
         }
     })  
     }
@@ -89,12 +89,77 @@ exports.modifyPassword = (req, res, next) => {
 
 exports.modifyUserName = (req, res, next) => {
   const userName = req.body.userName;
-  const email = req.body.email;
-  connexion.query(`UPDATE users SET userName='${userName}' 
-  WHERE email='${email}'`, (error, result) => {
-    if(error) {res.send(error.sqlMessage)}
-    else {res.send({message:"Update done"})}
-  }
-  )
-  // changer le nom d'utilisateur partout !!!
+  //const email = req.body.email;
+  
+  connexion.query(`SELECT userId FROM users WHERE email = ?`, [req.body.email], (error, result) => {
+    if(error) {res.status(500).send(error.sqlMessage)}
+    else {
+      const userId = result[0];
+
+      connexion.query(`UPDATE users SET userName='${userName}' 
+        WHERE userId='${userId.userId}'`, (error, result) => {
+          if(error) {res.status(500).send(error.sqlMessage)}
+          else {
+            connexion.query(`UPDATE publications SET userName='${userName}' 
+              WHERE userId='${userId.userId}'`, (error, result) => {
+            if(error) {res.status(500).send(error.sqlMessage)}
+            else {
+              connexion.query(`UPDATE comments SET userName='${userName}' 
+              WHERE userId='${userId.userId}'`, (error, result) => {
+                if (result) {res.status(200).send({message:"Update done"});}
+                if (error) {res.status(500).send(error);}
+              })
+            }
+            })
+          }
+        })
+    }
+  })  
 };
+
+exports.deleteUserAccount = (req, res, next) => {
+  connexion.query(`SELECT userId FROM users WHERE userName = ?`, [req.body.userName], (error, result) => {
+    if(error) {res.status(500).send(error.sqlMessage)}
+    else {
+      const userId = result[0];
+      connexion.query(`DELETE FROM users WHERE userId=?`,[userId.userId], (error, result) => {
+        if(error) {res.status(500).send(error.sqlMessage)}
+        else {
+          connexion.query(`DELETE FROM publications WHERE userId=?`,[userId.userId], (error, result) => {
+          if(error) {res.status(500).send(error.sqlMessage)}
+          else {
+            connexion.query(`UPDATE comments 
+                SET userName = 'utilisateur désinscrit'
+                WHERE userId = ?`, [userId.userId], (error, result) => {
+                  if (result) {res.status(200).send({message:"User deleted"});}
+                  if (error) {res.status(500).send(error);}
+            })
+          }
+          })
+        }
+      })
+    }
+  })
+};
+
+exports.testU = (req, res, next) => {
+  let checkIfExists =[];
+  connexion.query(`SELECT userName FROM users`, (error, result) => {
+    for (i of result) {
+      checkIfExists.push(i.userName)
+    }
+    const ooo = checkIfExists.includes(req.body.userName);
+    
+    if (ooo === false) {
+
+      if (!req.body.userPassword) {
+        this.modifyUserName(req, res);
+      } else {
+        this.signup(req, res);
+      }
+    } else {
+      res.status(400).send({message:"User already exists"})
+    }
+  })
+};
+

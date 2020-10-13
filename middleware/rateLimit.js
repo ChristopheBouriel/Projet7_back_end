@@ -11,3 +11,9 @@ exports.seeProfileLimiter = rateLimit({
     max: 300,
     message: "Too many attempts"
 });
+
+exports.deleteAccountLimiter = rateLimit({
+    windowMs: 3 * 60 * 60 * 1000,
+    max: 3,
+    message: "Too many attempts"
+});
