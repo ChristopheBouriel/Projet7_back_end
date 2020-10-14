@@ -6,9 +6,8 @@ const connexion = require('./dataBaseAccess');
 
 //const path = require('path');
 const helmet = require('helmet');
-//require('dotenv').config();
 
-//const saucesRoutes = require('./routes/sauce');
+
 const userRoutes = require('./routes/user');
 const publicationsRoutes = require('./routes/publication');
 const commentsRoutes = require('./routes/comment');

@@ -1,4 +1,5 @@
 const connexion = require('../dataBaseAccess');
+const xssFilters = require('xss-filters');
 
 
 exports.getAllComments = (req, res, next) => {
@@ -11,17 +12,33 @@ exports.getAllComments = (req, res, next) => {
   };
 
 exports.addComment = (req, res, next) => {
-    connexion.query(`INSERT INTO comments (userId, postId, userName, content, date_comment) VALUES (?,?,?,?,?)`, [req.body.userId, req.body.postId, req.body.userName, req.body.content, req.body.date_comment], (error, result)=>{
+
+    connexion.query(`SELECT userId FROM users WHERE userName = ?`, [req.body.userName], (error, result) => {
         if(error) {res.status(500).send(error.sqlMessage)}
         else {
-            connexion.query(`UPDATE publications 
-                SET numberComments = numberComments + 1
-                WHERE id = ?`, [req.body.postId],(error, result)=>{
-                                                if(error) {res.status(500).send(error.sqlMessage)}
-                                                else{res.status(201).send({message:"Comment added"})}
-                                                })
-        } 
-    })
+          const userId = result[0];
+          const postId = xssFilters.inHTMLData(req.body.postId);
+          const userName = xssFilters.inHTMLData(req.body.userName);
+          const content = xssFilters.inHTMLData(req.body.content);
+          const date_comment = xssFilters.inHTMLData(req.body.date_comment);
+
+          connexion.query(`INSERT INTO comments (userId, postId, userName, content, date_comment) VALUES (?,?,?,?,?)`, 
+            [userId, postId, userName, content, date_comment], (error, result)=>{
+                if(error) {res.status(500).send(error.sqlMessage)}
+                else {
+                    connexion.query(`UPDATE publications 
+                        SET numberComments = numberComments + 1
+                        WHERE id = ?`, [req.body.postId],(error, result)=>{
+                                                        if(error) {res.status(500).send(error.sqlMessage)}
+                                                        else{res.status(201).send({message:"Comment added"})}
+                                                        })
+                } 
+            })
+        }
+      })
+
+
+    
 };
 
 exports.deleteComment = (req, res, next) => {
@@ -39,10 +56,10 @@ exports.deleteComment = (req, res, next) => {
 };
 
 exports.modifyComment = (req, res, next) => {
-    const content = req.body.content;
-    const modified = req.body.modified;
-    const date_modif = req.body.date_modif;
-    const id = req.body.commentId;
+    const content = xssFilters.inHTMLData(req.body.content);
+    const modified = xssFilters.inHTMLData(req.body.modified);
+    const date_modif = xssFilters.inHTMLData(req.body.date_modif);
+    const id = xssFilters.inHTMLData(req.body.commentId);
     connexion.query(`UPDATE comments SET content='${content}', modified='${modified}', date_modif='${date_modif}' WHERE id='${id}'`, (error, result) => {
         if(error) {res.status(500).send(error.sqlMessage)}
         else {res.status(200).send({message:"Update done"})                                 

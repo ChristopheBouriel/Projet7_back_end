@@ -1,4 +1,5 @@
 const connexion = require('../dataBaseAccess');
+const xssFilters = require('xss-filters');
 
 
 
@@ -18,12 +19,12 @@ exports.seeProfile = (req, res, next) => {
 }
 
 exports.modifyProfile = (req, res, next) => {
-    const firstname = req.body.firstname;
-    const lastname = req.body.lastname;
-    const userName = req.body.userName;
-    const service = req.body.service;
+    const firstname = xssFilters.inHTMLData(req.body.firstname);
+    const lastname = xssFilters.inHTMLData(req.body.lastname);
+    const userName = xssFilters.inHTMLData(req.body.userName);
+    const service = xssFilters.inHTMLData(req.body.service);
     const email = req.body.email;
-    const aboutMe = req.body.aboutMe;
+    const aboutMe = xssFilters.inHTMLData(req.body.aboutMe);
     connexion.query(`UPDATE users SET firstname='${firstname}', lastname='${lastname}', 
     userName='${userName}', service='${service}', email='${email}', aboutMe='${aboutMe}' 
     WHERE userName='${userName}'`, (error, result) => {

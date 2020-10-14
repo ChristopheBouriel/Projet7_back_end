@@ -1,4 +1,5 @@
 const connexion = require('../dataBaseAccess');
+const xssFilters = require('xss-filters');
 
 
 exports.getAllPublications = (req, res, next) => {

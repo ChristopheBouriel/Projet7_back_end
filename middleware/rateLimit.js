@@ -2,7 +2,7 @@ const rateLimit = require("express-rate-limit");
 
 exports.accessCreateAccountLimiter = rateLimit({
     windowMs: 3 * 60 * 1000,
-    max: 5,
+    max: 10,
     message: "Too many attempts"
 });
 
@@ -17,3 +17,21 @@ exports.deleteAccountLimiter = rateLimit({
     max: 3,
     message: "Too many attempts"
 });
+
+exports.sendContentLimiter = rateLimit({
+    windowMs: 3 * 60 * 60 * 1000,
+    max: 200,
+    message: "Too many attempts"
+});
+
+exports.getContentLimiter = rateLimit({
+    windowMs: 3 * 60 * 60 * 1000,
+    max: 400,
+    message: "Too many attempts"
+});
+
+exports.deleteContentLimiter = rateLimit({
+    windowMs: 3 * 60 * 60 * 1000,
+    max: 50,
+    message: "Too many attempts"
+})

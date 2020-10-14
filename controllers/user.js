@@ -1,9 +1,9 @@
-//const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const connexion = require('../dataBaseAccess');
 const { v4: uuidv4} = require('uuid');
-//require('dotenv').config();
+const xssFilters = require('xss-filters');
+require('dotenv').config();
 
 exports.signup = (req, res, next) => {
     const userId = uuidv4();
@@ -12,13 +12,13 @@ exports.signup = (req, res, next) => {
       .then(hash => {
         user = {
             userId: userId,
-            userName: req.body.userName,
+            userName: xssFilters.inHTMLData(req.body.userName),
             userPassword: hash,
-            firstname : req.body.firstname,
-            lastname: req.body.lastname,
-            service: req.body.service,
+            firstname : xssFilters.inHTMLData(req.body.firstname),
+            lastname: xssFilters.inHTMLData(req.body.lastname),
+            service: xssFilters.inHTMLData(req.body.service),
             email: req.body.email,
-            aboutMe: req.body.aboutMe
+            aboutMe: xssFilters.inHTMLData(req.body.aboutMe)
         }; 
         console.log(user);
         connexion.query(
@@ -53,14 +53,14 @@ exports.login = (req, res, next) => {
               userName: user[0].userName,
               token: jwt.sign(
                 { userId: user[0].userId },
-                'provisory_token',
+                process.env.DB_TOK,
                 { expiresIn: '24h' }
               )
             });
           })
           .catch(error => res.status(500).json({ error }));
         }  
-    )   //.catch(error => res.status(500).json({ error }));
+    )   
 };
 
 exports.getAllUsers = (req, res, next) => {
@@ -88,7 +88,7 @@ exports.modifyPassword = (req, res, next) => {
 };
 
 exports.modifyUserName = (req, res, next) => {
-  const userName = req.body.userName;
+  const userName = xssFilters.inHTMLData(req.body.userName);
   //const email = req.body.email;
   
   connexion.query(`SELECT userId FROM users WHERE email = ?`, [req.body.email], (error, result) => {
@@ -144,11 +144,12 @@ exports.deleteUserAccount = (req, res, next) => {
 
 exports.testU = (req, res, next) => {
   let checkIfExists =[];
+  let userName = xssFilters.inHTMLData(req.body.userName);
   connexion.query(`SELECT userName FROM users`, (error, result) => {
     for (i of result) {
       checkIfExists.push(i.userName)
     }
-    const ooo = checkIfExists.includes(req.body.userName);
+    const ooo = checkIfExists.includes(userName);
     
     if (ooo === false) {
 
