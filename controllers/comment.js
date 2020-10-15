@@ -16,7 +16,7 @@ exports.addComment = (req, res, next) => {
     connexion.query(`SELECT userId FROM users WHERE userName = ?`, [req.body.userName], (error, result) => {
         if(error) {res.status(500).send(error.sqlMessage)}
         else {
-          const userId = result[0];
+          const userId = result[0].userId;
           const postId = xssFilters.inHTMLData(req.body.postId);
           const userName = xssFilters.inHTMLData(req.body.userName);
           const content = xssFilters.inHTMLData(req.body.content);
@@ -36,9 +36,6 @@ exports.addComment = (req, res, next) => {
             })
         }
       })
-
-
-    
 };
 
 exports.deleteComment = (req, res, next) => {
@@ -56,11 +53,11 @@ exports.deleteComment = (req, res, next) => {
 };
 
 exports.modifyComment = (req, res, next) => {
-    const content = xssFilters.inHTMLData(req.body.content);
+    const content = xssFilters.inHTMLData(req.body.content.replace(/\"/gi,'&µ'));
     const modified = xssFilters.inHTMLData(req.body.modified);
     const date_modif = xssFilters.inHTMLData(req.body.date_modif);
     const id = xssFilters.inHTMLData(req.body.commentId);
-    connexion.query(`UPDATE comments SET content='${content}', modified='${modified}', date_modif='${date_modif}' WHERE id='${id}'`, (error, result) => {
+    connexion.query(`UPDATE comments SET content="${content}", modified="${modified}", date_modif="${date_modif}" WHERE id="${id}"`, (error, result) => {
         if(error) {res.status(500).send(error.sqlMessage)}
         else {res.status(200).send({message:"Update done"})                                 
         }

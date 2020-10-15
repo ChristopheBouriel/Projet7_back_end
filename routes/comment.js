@@ -3,7 +3,7 @@ const router = express.Router();
 
 const accessCheck = require('../middleware/rateLimit');
 const commentCtrl = require('../controllers/comment');
-const contentValidator = require('../middleware/content-validator');
+const contentValidator = require('../middleware/comment-validator');
 
 router.post('', accessCheck.getContentLimiter, commentCtrl.getAllComments);
 router.post('/add', accessCheck.sendContentLimiter, contentValidator, commentCtrl.addComment);

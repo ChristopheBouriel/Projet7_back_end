@@ -23,11 +23,11 @@ exports.modifyProfile = (req, res, next) => {
     const lastname = xssFilters.inHTMLData(req.body.lastname);
     const userName = xssFilters.inHTMLData(req.body.userName);
     const service = xssFilters.inHTMLData(req.body.service);
-    const email = req.body.email;
+    const email = xssFilters.inHTMLData(req.body.email);
     const aboutMe = xssFilters.inHTMLData(req.body.aboutMe);
-    connexion.query(`UPDATE users SET firstname='${firstname}', lastname='${lastname}', 
-    userName='${userName}', service='${service}', email='${email}', aboutMe='${aboutMe}' 
-    WHERE userName='${userName}'`, (error, result) => {
+    connexion.query(`UPDATE users SET firstname="${firstname}", lastname="${lastname}", 
+    userName="${userName}", service="${service}", email="${email}", aboutMe="${aboutMe}" 
+    WHERE userName="${userName}"`, (error, result) => {
         if(error) {res.status(500).send(error.sqlMessage)}
         else {res.status(200).send({message:"Update done"})                                    
         }

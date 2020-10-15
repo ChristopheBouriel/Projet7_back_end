@@ -35,3 +35,9 @@ exports.deleteContentLimiter = rateLimit({
     max: 50,
     message: "Too many attempts"
 })
+
+exports.postLimiter = rateLimit({
+    windowMs: 3 * 60 * 60 * 1000,
+    max: 10,
+    message: "Too many attempts"
+})

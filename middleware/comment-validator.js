@@ -1,6 +1,6 @@
 module.exports = (req, res, next) => {
     //const regex1 = RegExp(/^[0-9a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F '-]{2,30}$/);
-    const regex = RegExp(/^[A-Z\u00C0-\u00D6\u00D8-\u00DF]{0,1}[0-9a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F !?:(),\n\.'-]{0,4000}$/);
+    const regex = RegExp(/^[A-Z\u00C0-\u00D6\u00D8-\u00DF]{0,1}[0-9a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F !?:"(),\n\.'-]{0,4000}$/);
 
     try {  
             const content = req.body.content;
@@ -12,6 +12,6 @@ module.exports = (req, res, next) => {
             }
         
         } catch {
-          res.status(400).send({ message:'Une erreur s\'est produite'});
+          res.status(500).send({ message:'Une erreur s\'est produite'});
         }
       };

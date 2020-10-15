@@ -49,7 +49,7 @@ exports.login = (req, res, next) => {
               return res.status(400).send({ error: 'Mot de passe incorrect !' });
             }
             res.status(200).json({
-              userId: user[0].userId,
+              //userId: user[0].userId,
               userName: user[0].userName,
               token: jwt.sign(
                 { userId: user[0].userId },
@@ -77,8 +77,8 @@ exports.modifyPassword = (req, res, next) => {
   .then(hash => {
     password = hash
     const email = req.body.email;
-  connexion.query(`UPDATE users SET userPassword='${password}' 
-    WHERE email='${email}'`, (error, result) => {
+  connexion.query(`UPDATE users SET userPassword="${password}" 
+    WHERE email="${email}"`, (error, result) => {
         if(error) {res.status(500).send(error.sqlMessage)}
         else {res.status(200).send({message:"Update done"})                                    
         }
@@ -96,16 +96,16 @@ exports.modifyUserName = (req, res, next) => {
     else {
       const userId = result[0];
 
-      connexion.query(`UPDATE users SET userName='${userName}' 
-        WHERE userId='${userId.userId}'`, (error, result) => {
+      connexion.query(`UPDATE users SET userName="${userName}" 
+        WHERE userId="${userId.userId}"`, (error, result) => {
           if(error) {res.status(500).send(error.sqlMessage)}
           else {
-            connexion.query(`UPDATE publications SET userName='${userName}' 
-              WHERE userId='${userId.userId}'`, (error, result) => {
+            connexion.query(`UPDATE publications SET userName="${userName}" 
+              WHERE userId="${userId.userId}"`, (error, result) => {
             if(error) {res.status(500).send(error.sqlMessage)}
             else {
-              connexion.query(`UPDATE comments SET userName='${userName}' 
-              WHERE userId='${userId.userId}'`, (error, result) => {
+              connexion.query(`UPDATE comments SET userName="${userName}" 
+              WHERE userId="${userId.userId}"`, (error, result) => {
                 if (result) {res.status(200).send({message:"Update done"});}
                 if (error) {res.status(500).send(error);}
               })
@@ -159,7 +159,7 @@ exports.testU = (req, res, next) => {
         this.signup(req, res);
       }
     } else {
-      res.status(400).send({message:"User already exists"})
+      res.status(400).send({message:"Le nom d'utilisateur est déjà pris"})
     }
   })
 };
