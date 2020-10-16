@@ -12,6 +12,7 @@ const userRoutes = require('./routes/user');
 const publicationsRoutes = require('./routes/publication');
 const commentsRoutes = require('./routes/comment');
 const profilesRoutes = require('./routes/profile');
+const moderateRoutes = require('./routes/moderate');
 const app = express();
 
 app.use(helmet());
@@ -29,5 +30,6 @@ app.use('/api/publications', publicationsRoutes);
 app.use('/api/comments', commentsRoutes);
 app.use('/api/auth', userRoutes);
 app.use('/api/profiles', profilesRoutes);
+app.use('/api/moderate', moderateRoutes);
 
 module.exports = app;
