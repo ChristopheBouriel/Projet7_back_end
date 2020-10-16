@@ -1,19 +1,24 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
+const connexion = require('../dataBaseAccess');
+
 
 module.exports = (req, res, next) => {
-  try {
-    const token = req.headers.authorization.split(' ')[1];
-    const decodedToken = jwt.verify(token, process.env.DB_TOK);
-    const userId = decodedToken.userId;
-    if (req.body.userId && req.body.userId !== userId) {
-      throw 'Invalid user ID';
-    } else {
-      next();
-    }
-  } catch {
-    res.status(401).json({
-      error: new Error('Invalid request!')
-    });
-  }
+  const token = req.headers.authorization.split(' ')[1];
+  const decodedToken = jwt.verify(token, process.env.DB_TOK);
+  const userId = decodedToken.userId;
+  console.log(userId)
+
+  connexion.query(`SELECT userId FROM users WHERE userName = ?`, [req.body.userName], (error, result) => {
+      if(error) {res.status(500).send(error.sqlMessage)}
+      else {
+        console.log(result)
+          const userIdCheck = result[0].userId;
+          if ( userIdCheck === userId) {
+          next()
+          } else {
+              res.status(400).send({message:"problème d'identification"});
+        }
+      }
+  })
 };

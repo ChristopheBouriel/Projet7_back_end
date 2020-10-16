@@ -3,8 +3,9 @@ const router = express.Router();
 
 
 const moderateCtrl = require('../controllers/moderate');
+const auth = require('../middleware/auth');
 
-router.post('/publication', moderateCtrl.moderatePublication);
-router.post('/comment', moderateCtrl.moderateComment);
+router.post('/publication', auth, moderateCtrl.moderatePublication);
+router.post('/comment', auth, moderateCtrl.moderateComment);
 
 module.exports = router;
