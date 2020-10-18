@@ -7,6 +7,6 @@ const profileValidator = require('../middleware/profile-Validator');
 const auth = require('../middleware/auth');
 
 router.get('/:userName', accessCheck.seeProfileLimiter, profileCtrl.seeProfile);
-router.post('/modify', accessCheck.seeProfileLimiter, auth, profileValidator, profileCtrl.modifyProfile);
+router.put('/modify', accessCheck.seeProfileLimiter, auth, profileValidator, profileCtrl.modifyProfile);
 
 module.exports = router;

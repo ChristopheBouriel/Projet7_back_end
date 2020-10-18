@@ -1,8 +1,5 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-//const mysql = require('mysql');
-
-const connexion = require('./dataBaseAccess');
 
 //const path = require('path');
 const helmet = require('helmet');
