@@ -31,7 +31,6 @@ exports.markAsRead = (req, res, next) => {
 }
 
 exports.addPublication = (req, res, next) => {
-
     connexion.query(`SELECT userId FROM users WHERE userName = ?`, [req.body.userName], (error, result) => {
         if(error) {res.status(500).send(error.sqlMessage)}
           else {
@@ -70,7 +69,7 @@ exports.modifyPost = (req, res, next) => {
           }
       })  
 
-    } else {res.status(401)}
+    } else {res.status(401).send({message:"Attention"})}
   }
   
   )
@@ -95,7 +94,7 @@ exports.deletePost = (req, res, next) => {
         }
         })  
 
-    } else {res.status(401)}
+    } else {res.status(401).send({message:"Attention"})}
   })
 
 

@@ -33,9 +33,9 @@ exports.addComment = (req, res, next) => {
                     connexion.query(`UPDATE publications 
                         SET numberComments = numberComments + 1
                         WHERE id = ?`, [req.body.postId],(error, result)=>{
-                                                        if(error) {res.status(500).send(error.sqlMessage)}
-                                                        else{res.status(201).send({message:"Comment added"})}
-                                                        })
+                            if(error) {res.status(500).send(error.sqlMessage)}
+                            else{res.status(201).send({message:"Comment added"})}
+                    })
                 } 
             })
         }
@@ -43,30 +43,25 @@ exports.addComment = (req, res, next) => {
 };
 
 exports.deleteComment = (req, res, next) => {
-
     connexion.query(`SELECT userName FROM comments WHERE id = ?`, [req.body.id], (error, result) => {
         if(error) {res.status(500).send(error.sqlMessage)}
         else if ( result.length !== 0 && result[0].userName === req.body.userName) {
-    
+            
           connexion.query(`DELETE FROM comments WHERE id=?`,[req.body.id], (error, result) => {
                 if(error) {res.status(500).send(error.sqlMessage)}
                 else {
                     connexion.query(`UPDATE publications 
                         SET numberComments = numberComments - 1
                         WHERE id = ?`, [req.body.postId], (error, result) => {
-                                                        if (result) {res.status(200).send({message:"Comment deleted"});}
-                                                        if (error) {res.status(500).send(error);}
-                                                        })
+                            if (result) {res.status(200).send({message:"Comment deleted"});
+                                }
+                            if (error) {res.status(500).send(error);}
+                    })
                 }
             })  
-    
         } else {res.status(401).send({message:"Attention"})}
       }
-      
-      )
-
-
-    
+      )    
 };
 
 exports.modifyComment = (req, res, next) => {
@@ -84,9 +79,6 @@ exports.modifyComment = (req, res, next) => {
                 }
             })    
         } else {res.status(401).send({message:"Attention"})}
-      }
-      
-      )
-
-      
+      }      
+      )      
 };

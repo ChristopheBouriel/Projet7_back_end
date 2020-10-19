@@ -35,3 +35,27 @@ exports.moderateComment = (req, res, next) => {
         res.status(401).send({message:"Vous n'êtes pas modérateur !"})
     }    
 };
+
+
+exports.getNewParticipations = (req, res, next) =>  {
+    const lastLogout = req.body.lastLogout;
+    connexion.query(`SELECT id, title, moderated, viewed, userName, moderated FROM publications WHERE date_publication > "${lastLogout}"  ORDER BY id DESC`, (error, result) => {
+      //console.log(result[0].userName);
+      console.log(req.params.userName)
+      if(error) {res.status(500).send(error.sqlMessage)}
+      else {
+        const postInfos = result;
+        console.log(postInfos);
+        connexion.query(`SELECT comments.id, comments.postId, publications.title, comments.moderated, comments.userName 
+        FROM comments INNER JOIN publications ON comments.postId = publications.id WHERE date_comment > "${lastLogout}" 
+        ORDER BY comments.postId DESC`, (error, result) => {
+          if(error) {res.status(500).send(error.sqlMessage)}
+              else{
+                const commentInfos = result;
+                const response = {postInfos, commentInfos};
+                console.log(response)
+                res.status(200).send(response)};                                            
+        })
+        }
+    })  
+  }

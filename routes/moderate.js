@@ -7,5 +7,6 @@ const auth = require('../middleware/auth');
 
 router.put('/publication', auth, moderateCtrl.moderatePublication);
 router.put('/comment', auth, moderateCtrl.moderateComment);
+router.post('/news', moderateCtrl.getNewParticipations);
 
 module.exports = router;

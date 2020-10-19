@@ -8,5 +8,7 @@ const auth = require('../middleware/auth');
 
 router.get('/:userName', accessCheck.seeProfileLimiter, profileCtrl.seeProfile);
 router.put('/modify', accessCheck.seeProfileLimiter, auth, profileValidator, profileCtrl.modifyProfile);
+router.get('/notifications/:userName', accessCheck.seeProfileLimiter, profileCtrl.getNotifications);
+
 
 module.exports = router;

@@ -14,14 +14,14 @@ exports.seeProfile = (req, res, next) => {
       if (checkUserId) {
         const userInfos = result;
         connexion.query(`SELECT id, date_publication, title, content, likes, numberComments, userName, modified, date_modif, moderated FROM publications WHERE userName = ?`, [req.params.userName], (error, result)=>{
-                                            if(error) {res.status(500).send(error.sqlMessage)}
-                                            else{
-                                              const response = {userInfos, result} 
-                                              res.send(response)}
-                                            })
+            if(error) {res.status(500).send(error.sqlMessage)}
+            else{
+              const response = {userInfos, result}; 
+              res.send(response)};
+              })
       } else {
-        res.status(200).send({message:"Problème d'identification"})
-      }
+        res.status(200).send({message:"Problème d'identification"});
+      };
     } 
   })
 }
@@ -40,5 +40,26 @@ exports.modifyProfile = (req, res, next) => {
         else {res.status(200).send({message:"Update done"})                                    
         }
     })  
+}
+
+exports.getNotifications = (req, res, next) => {
+  const userName =  req.params.userName;
+  connexion.query(`SELECT id, title, moderated, viewed, userName, moderated FROM publications WHERE (userName = "${userName}" AND viewed = 0) OR (userName="${userName}" AND moderated = 1)  ORDER BY date_publication DESC`, (error, result) => {
+    //console.log(result[0].userName);
+    console.log(req.params.userName)
+    if(error) {res.status(500).send(error.sqlMessage)}
+    else {
+      const postInfos = result;
+      console.log(postInfos);
+      connexion.query(`SELECT comments.id, comments.postId, publications.title, comments.moderated, comments.userName FROM comments INNER JOIN publications ON comments.postId = publications.id WHERE comments.userName = ? AND comments.moderated = 1  ORDER BY date_comment DESC`, [req.params.userName], (error, result) => {
+        if(error) {res.status(500).send(error.sqlMessage)}
+            else{
+              const commentInfos = result;
+              const response = {postInfos, commentInfos};
+              console.log(response)
+              res.status(200).send(response)};                                            
+      })
+      }
+  })  
 }
 

@@ -51,7 +51,7 @@ exports.login = (req, res, next) => {
                 tokAdmin = "moderator";                
               } else { tokAdmin = "none" }
             res.status(200).json({
-              lastLogin: user[0].date_logout,
+              lastLogout: user[0].date_logout,
               admin: user[0].isMod,
               userName: user[0].userName,
               token: jwt.sign(
@@ -120,8 +120,7 @@ exports.modifyUserName = (req, res, next) => {
 exports.deleteUserAccount = (req, res, next) => {
   connexion.query(`SELECT userId FROM users WHERE userName = ?`, [req.body.userName], (error, result) => {
     if(error) {res.status(500).send(error.sqlMessage)}
-    else {
-      
+    else {      
       const userId = result[0];
       connexion.query(`DELETE FROM users WHERE userId=?`,[userId.userId], (error, result) => {
         if(error) {res.status(500).send(error.sqlMessage)}
