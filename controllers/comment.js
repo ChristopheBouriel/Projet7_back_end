@@ -9,9 +9,7 @@ exports.getAllComments = (req, res, next) => {
         }
         res.status(200).send(result);
     })
-  };
-
-  
+  }; 
 
 
 exports.addComment = (req, res, next) => {

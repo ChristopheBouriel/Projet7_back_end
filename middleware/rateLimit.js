@@ -41,3 +41,10 @@ exports.postLimiter = rateLimit({
     max: 10,
     message: "Too many attempts"
 })
+
+exports.seeLimiter = rateLimit({
+    windowMs: 3 * 60 * 60 * 1000,
+    max: 200,
+    message: "Too many attempts"
+})
+

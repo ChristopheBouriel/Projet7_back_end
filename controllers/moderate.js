@@ -39,7 +39,7 @@ exports.moderateComment = (req, res, next) => {
 
 exports.getNewParticipations = (req, res, next) =>  {
     const lastLogout = req.body.lastLogout;
-    connexion.query(`SELECT id, title, moderated, viewed, userName, moderated FROM publications WHERE date_publication > "${lastLogout}"  ORDER BY id DESC`, (error, result) => {
+    connexion.query(`SELECT id, title, moderated, viewed, userName FROM publications WHERE date_publication > "${lastLogout}"  ORDER BY id DESC`, (error, result) => {
       //console.log(result[0].userName);
       console.log(req.params.userName)
       if(error) {res.status(500).send(error.sqlMessage)}
