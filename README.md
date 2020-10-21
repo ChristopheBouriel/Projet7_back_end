@@ -1,4 +1,4 @@
-Création de la base de donnée SQL
+1. Création de la base de donnée SQL :
 
 CREATE DATABASE Groupomania ;
 
@@ -44,14 +44,13 @@ CREATE TABLE comments (
 )ENGINE=INNODB; DEFAULT CHARSET=utf8;
 
 
-Création du fichier .env
+2. Création du fichier .env :
 
-Ci-dessous les noms de variables utilisées par le back-end :
-
+	Ci-dessous les noms de variables utilisées par le back-end :
 	DB_USER='votre nom d'utilisateur'
 	DB_PASS='votre mot de passe'
 	DB_NAME=groupomania
 	DB_TOK='votre chaîne de caractères pour le token'
 
 
-Pour lancer le serveur, une fois dans le dossier Back-end, lancer la commande : node server
+3. Pour lancer le serveur, une fois dans le dossier Back-end, lancer la commande : node server
