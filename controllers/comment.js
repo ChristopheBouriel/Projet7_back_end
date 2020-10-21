@@ -14,7 +14,6 @@ exports.getAllComments = (req, res, next) => {
 
 exports.addComment = (req, res, next) => {
     const a = {...req.body};
-    console.log(a)
     connexion.query(`SELECT userId FROM users WHERE userName = ?`, [req.body.userName], (error, result) => {
         if(error) {res.status(500).send(error.sqlMessage)}
         else {
@@ -23,9 +22,8 @@ exports.addComment = (req, res, next) => {
           const userName = xssFilters.inHTMLData(req.body.userName);
           const content = xssFilters.inHTMLData(req.body.content);
           const date_comment = xssFilters.inHTMLData(req.body.date_comment);
-
-          connexion.query(`INSERT INTO comments (userId, postId, userName, content, date_comment) VALUES (?,?,?,?,?)`, 
-            [userId, postId, userName, content, date_comment], (error, result)=>{
+          connexion.query(`INSERT INTO comments (postId, userName, content, date_comment) VALUES (?,?,?,?)`, 
+            [ postId, userName, content, date_comment], (error, result)=>{
                 if(error) {res.status(500).send(error.sqlMessage)}
                 else {
                     connexion.query(`UPDATE publications 
@@ -43,8 +41,7 @@ exports.addComment = (req, res, next) => {
 exports.deleteComment = (req, res, next) => {
     connexion.query(`SELECT userName FROM comments WHERE id = ?`, [req.body.id], (error, result) => {
         if(error) {res.status(500).send(error.sqlMessage)}
-        else if ( result.length !== 0 && result[0].userName === req.body.userName) {
-            
+        else if ( result.length !== 0 && result[0].userName === req.body.userName) {            
           connexion.query(`DELETE FROM comments WHERE id=?`,[req.body.id], (error, result) => {
                 if(error) {res.status(500).send(error.sqlMessage)}
                 else {
@@ -62,8 +59,7 @@ exports.deleteComment = (req, res, next) => {
       )    
 };
 
-exports.modifyComment = (req, res, next) => {
-    
+exports.modifyComment = (req, res, next) => {    
     connexion.query(`SELECT userName FROM comments WHERE id = ?`, [req.body.commentId], (error, result) => {
         if(error) {res.status(500).send(error.sqlMessage)}
         else if (result.length !== 0 && result[0].userName === req.body.userName) {    

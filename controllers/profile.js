@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 
 
 exports.seeProfile = (req, res, next) => {
-  connexion.query(`SELECT userName, firstname, lastname, service, email, aboutMe FROM users WHERE userName = ?`, [req.params.userName], (error, result)=>{
+  connexion.query(`SELECT userName, userId, firstname, lastname, service, email, aboutMe FROM users WHERE userName = ?`, [req.params.userName], (error, result)=>{
     if(error) {res.status(500).send(error.sqlMessage)}
     else {
       const token = req.headers.authorization.split(' ')[1];
@@ -45,20 +45,22 @@ exports.modifyProfile = (req, res, next) => {
 exports.getNotifications = (req, res, next) => {
   const userName =  req.params.userName;
   connexion.query(`SELECT id, title, moderated, viewed, userName, moderated FROM publications WHERE (userName = "${userName}" AND viewed = 0) OR (userName="${userName}" AND moderated = 1)  ORDER BY date_publication DESC`, (error, result) => {
-    //console.log(result[0].userName);
-    console.log(req.params.userName)
     if(error) {res.status(500).send(error.sqlMessage)}
     else {
+      const token = req.headers.authorization.split(' ')[1];
+      const decodedToken = jwt.verify(token, process.env.DB_TOK);
+      const checkUserId = decodedToken.userId;
+      if (checkUserId) {
       const postInfos = result;
-      console.log(postInfos);
       connexion.query(`SELECT comments.id, comments.postId, publications.title, comments.moderated, comments.userName FROM comments INNER JOIN publications ON comments.postId = publications.id WHERE comments.userName = ? AND comments.moderated = 1  ORDER BY date_comment DESC`, [req.params.userName], (error, result) => {
         if(error) {res.status(500).send(error.sqlMessage)}
             else{
               const commentInfos = result;
               const response = {postInfos, commentInfos};
-              console.log(response)
               res.status(200).send(response)};                                            
-      })
+      })} else {
+        res.status(200).send({message:"Problème d'identification"});
+      };
       }
   })  
 }

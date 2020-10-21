@@ -67,11 +67,19 @@ exports.login = (req, res, next) => {
 };
 
 exports.getAllUsers = (req, res, next) => {
-  connexion.query(`SELECT userName, firstname, lastname, service FROM users ORDER BY userName`, (error, result) => {
+  const token = req.headers.authorization.split(' ')[1];
+  const decodedToken = jwt.verify(token, process.env.DB_TOK);
+  const checkUserId = decodedToken.userId;
+  if (checkUserId) {
+    connexion.query(`SELECT userName, firstname, lastname, service FROM users ORDER BY userName`, (error, result) => {
     if(error) {res.status(500).send(error.sqlMessage)}
     else {res.status(200).send(result);                                  
     }
-  })
+    })
+  } else {
+    res.status(200).send({message:"Problème d'identification"});
+  }
+  
 };
 
 exports.modifyPassword = (req, res, next) => {
@@ -146,8 +154,7 @@ exports.testU = (req, res, next) => {
   let checkIfExists =[];
   let userName;
   if (!req.body.newUserName) {userName = xssFilters.inHTMLData(req.body.userName);}
-  else {userName = xssFilters.inHTMLData(req.body.newUserName)}
-  
+  else {userName = xssFilters.inHTMLData(req.body.newUserName)};  
   connexion.query(`SELECT userName FROM users`, (error, result) => {
     for (i of result) {
       checkIfExists.push(i.userName)

@@ -15,6 +15,6 @@ router.get('/list', accessCheck.seeProfileLimiter, userCtrl.getAllUsers);
 router.put('/changeP', accessCheck.accessCreateAccountLimiter, auth, userCtrl.modifyPassword);
 router.put('/changeU', accessCheck.accessCreateAccountLimiter,auth, userNameValidator, userCtrl.testU);
 router.post('/deleteU', accessCheck.deleteAccountLimiter, auth,  userCtrl.deleteUserAccount);
-router.put('/logout', auth, userCtrl.logoutDate);
+router.put('/logout', accessCheck.logOutLimiter, auth, userCtrl.logoutDate);
 
 module.exports = router;

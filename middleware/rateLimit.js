@@ -48,3 +48,8 @@ exports.seeLimiter = rateLimit({
     message: "Too many attempts"
 })
 
+exports.logOutLimiter = rateLimit({
+    windowMs: 2 * 60 * 60 * 1000,
+    max: 20,
+    message: "Too many attempts"
+})
