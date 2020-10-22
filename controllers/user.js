@@ -78,8 +78,7 @@ exports.getAllUsers = (req, res, next) => {
     })
   } else {
     res.status(200).send({message:"Problème d'identification"});
-  }
-  
+  }  
 };
 
 exports.modifyPassword = (req, res, next) => {
@@ -114,8 +113,8 @@ exports.modifyUserName = (req, res, next) => {
             else {
               connexion.query(`UPDATE comments SET userName="${newUserName}" 
               WHERE userId="${userId.userId}"`, (error, result) => {
-                if (result) {res.status(200).send({message:"Update done"});}
                 if (error) {res.status(500).send(error);}
+                else {res.status(200).send({message:"Update done"});}
               })
             }
             })

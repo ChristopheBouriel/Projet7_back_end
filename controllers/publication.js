@@ -54,8 +54,8 @@ exports.addPublication = (req, res, next) => {
           const content = xssFilters.inHTMLData(req.body.content.replace(/\"/gi,'&µ'));
           const date_publication = xssFilters.inHTMLData(req.body.date_publication);
 
-          connexion.query(`INSERT INTO publications (title, userName, content, date_publication) VALUES (?,?,?,?)`, 
-            [title, userName, content, date_publication], (error, result)=>{
+          connexion.query(`INSERT INTO publications (userId, title, userName, content, date_publication) VALUES (?,?,?,?,?)`, 
+            [userId, title, userName, content, date_publication], (error, result)=>{
                 if(error) {res.status(500).send(error.sqlMessage)}
                 else {res.status(201).send({message:"Publication added"})}          
           })

@@ -22,8 +22,8 @@ exports.addComment = (req, res, next) => {
           const userName = xssFilters.inHTMLData(req.body.userName);
           const content = xssFilters.inHTMLData(req.body.content);
           const date_comment = xssFilters.inHTMLData(req.body.date_comment);
-          connexion.query(`INSERT INTO comments (postId, userName, content, date_comment) VALUES (?,?,?,?)`, 
-            [ postId, userName, content, date_comment], (error, result)=>{
+          connexion.query(`INSERT INTO comments (userId, postId, userName, content, date_comment) VALUES (?,?,?,?,?)`, 
+            [userId, postId, userName, content, date_comment], (error, result)=>{
                 if(error) {res.status(500).send(error.sqlMessage)}
                 else {
                     connexion.query(`UPDATE publications 
