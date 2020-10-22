@@ -49,9 +49,9 @@
 2. Création du fichier .env :
 
 	Ci-dessous les noms de variables utilisées par le back-end :
-		DB_USER='votre nom d'utilisateur'
-		DB_PASS='votre mot de passe'
-		DB_NAME=groupomania
-		DB_TOK='votre chaîne de caractères pour le token'
+	DB_USER='votre nom d'utilisateur'
+	DB_PASS='votre mot de passe'
+	DB_NAME=groupomania
+	DB_TOK='votre chaîne de caractères pour le token'
 
 3. Pour démarrer le serveur, une fois dans le dossier Back-end, lancer la commande : node server
