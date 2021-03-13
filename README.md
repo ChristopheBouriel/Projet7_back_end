@@ -36,13 +36,6 @@ https://shareplace-evo.netlify.app
 1. Start an instance on a MySQL server and create the database. You can find all the instructions for the MySQL database in the file named sample.sql in the root folder.  
 
 
-2. Create a .env file :
-	DB_USER='your username'  
-	DB_PASS='your password'  
-	DB_NAME=groupomania  
-	DB_TOK='your string for the token'  
-
-
 2. Clone this repo :  
 `git clone https://github.com/ChristopheBouriel/SharePlace-Evolution-API.git`
 
