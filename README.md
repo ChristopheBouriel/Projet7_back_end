@@ -46,7 +46,7 @@ https://shareplace-evo.netlify.app
 	DB_TOK='your string for the token'  
 
 3. In your terminal, enter inside the root folder of the project :  
-`cd Oriteddy`
+`cd Projet7_back_end`
 
 3. Then type the command bellow :  
 `npm install`
