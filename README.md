@@ -1,57 +1,63 @@
-1. Création de la base de donnée SQL :
+# About this repo :
 
-	CREATE DATABASE Groupomania ;
+This is the back-end for a company's social network app which has been made with Node.js and Express, as part of the final project for my Junior Web Develepper training.  
+You'll find the repository of the front-end by following this link :  
+https://github.com/ChristopheBouriel/SharePlace-Evolution-UI.git  
 
-	CREATE TABLE users (
-		id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-		userId VARCHAR(60) NOT NULL,
-		userName VARCHAR(40) NOT NULL,
-		userPassword CHAR(60) NOT NULL,
-		firstname VARCHAR(40) NOT NULL,
-		lastmane VARCHAR(40) NOT NULL,
-		service VARCHAR(30) NOT NULL,
-		email VARCHAR(40) NOT NULL,
-		aboutMe VARCHAR(40) NOT NULL,
-		isMod BOOLEAN DEFAULT 0,
-		date_logout DATETIME,	
-		PRIMARY KEY (id)
-	)ENGINE=INNODB DEFAULT CHARSET=utf8;
-
-	CREATE TABLE publications (
-		id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-		userId VARCHAR(60) NOT NULL,
-		date_publication DATETIME NOT NULL,
-		title VARCHAR(60) NOT NULL,
-		content TEXT NOT NULL,
-		numberComments INT DEFAULT 0,
-		userName VARCHAR(40) NOT NULL,
-		modified BOOLEAN DEFAULT 0,
-		date_modif DATETIME,
-		moderated BOOLEAN DEFAULT 0,
-		viewed BOOLEAN DEFAULT 1,
-		PRIMARY KEY (id)
-	)ENGINE=INNODB DEFAULT CHARSET=utf8;
-
-	CREATE TABLE comments (
-		id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-		userId VARCHAR(60) NOT NULL,
-		postId INT NOT NULL,
-		date_comment DATE,
-		content TEXT NOT NULL,
-		userName VARCHAR(40) NOT NULL,
-		modified BOOLEAN DEFAULT 0,
-		date_modif DATETIME,
-		moderated BOOLEAN DEFAULT 0,
-		PRIMARY KEY (id)
-	)ENGINE=INNODB; DEFAULT CHARSET=utf8;
+You can get more informations about this project and this app in my portfolio :  
+https://portfolio-christophe-bouriel.netlify.app  
 
 
-2. Création du fichier .env :
+## The API
 
-	Ci-dessous les noms de variables utilisées par le back-end :
-	DB_USER='votre nom d'utilisateur'
-	DB_PASS='votre mot de passe'
-	DB_NAME=groupomania
-	DB_TOK='votre chaîne de caractères pour le token'
+In order to have a back-end as safe as I could given my knowledge on the moment, I tried to follow the recommendations of OWASP concerning the points on which the developper can take part. 
+I installed packages downloaded from the npm registry, I wrote my own middlewares for user's inputs validation, but I also added verifications on most of the routes depending on the type of the request : for example, in order to be sure that the user wanting to modify or delete a publication, a comment or a profile, is the same one who created it.  
+You can find all the instructions for the MySQL database in the file named sample.sql in the root folder.
 
-3. Pour démarrer le serveur, une fois dans le dossier Back-end, lancer la commande : node server
+
+## The packages for security
+
+The following packages have been used :
+* [express-rate-limit](https://www.npmjs.com/package/express-rate-limit)
+* [bcrypt](https://www.npmjs.com/package/bcrypt)
+* [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)
+* [xss-filters](https://www.npmjs.com/package/xss-filters)
+* [helmet](https://www.npmjs.com/package/helmet)
+
+
+## The whole app
+
+However, I already deployed the whole app on Internet so that you can directly use it :
+https://shareplace-evo.netlify.app
+
+
+# Instructions :
+
+1. Start an instance on a MySQL server and create the database. You can find all the instructions for the MySQL database in the file named sample.sql in the root folder.  
+
+
+2. Create a .env file :
+	DB_USER='your username'  
+	DB_PASS='your password'  
+	DB_NAME=groupomania  
+	DB_TOK='your string for the token'  
+
+
+2. Clone this repo :  
+`git clone https://github.com/ChristopheBouriel/SharePlace-Evolution-API.git`
+
+2. Enter inside the root folder of the project, create a .env file and copy the following variables :
+	DB_USER='your username'  
+	DB_PASS='your password'  
+	DB_NAME=groupomania  
+	DB_TOK='your string for the token'  
+
+3. In your terminal, enter inside the root folder of the project :  
+`cd Oriteddy`
+
+3. Then type the command bellow :  
+`npm install`
+
+4. Wait for everything to be installed, then type :  
+`node server`
+
